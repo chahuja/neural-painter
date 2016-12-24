@@ -12,7 +12,7 @@ import theano.tensor as T
 
 import os
 import numpy as np
-import cv2
+import scipy.misc
 
 
 eps = 1e-8
@@ -104,13 +104,6 @@ def draw(func, w, h, coord_bias=False):
     if img.shape[2] == 1:
         img = img[:,:]
     return img
-
-
-def cvpause():
-    while True:
-        if (cv2.waitKey(0) & 0xff) == ord('q'):
-            break
-        print('press `q` to close this window')
 
 
 def get_nonlin(name, rng):
@@ -209,15 +202,13 @@ def run(args):
     print('Drawing...')
     img = draw(func, w, h, coord_bias=args.coord_bias)
 
-    if args.output:
-        output = args.output
-        name, ext = os.path.splitext(output)
-        if args.auto_name:
-            name = name + '-' + args2name(args)
-        cv2.imwrite(name + ext, img)
-    else:
-        cv2.imshow('img', img)
-        cvpause()
+
+    output = args.output
+    name, ext = os.path.splitext(output)
+    if args.auto_name:
+        name = name + '-' + args2name(args)
+    scipy.misc.imsave(name + ext, img)
+
 
 
 def main():
